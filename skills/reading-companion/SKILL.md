@@ -82,9 +82,22 @@ Claude 会：
 
 ## 工具命令
 
-本 Skill 依赖项目目录的 `main.py`。请确保在插件安装目录下运行命令。
+**重要**：`main.py` 位于插件根目录（与 `pyproject.toml` 同级），不在 `skills/` 目录下。
+
+插件目录结构：
+```
+{plugin_root}/           ← 在这里执行命令
+├── main.py              ← 工具入口
+├── pyproject.toml
+├── uv.lock
+└── skills/
+    └── reading-companion/
+        └── SKILL.md     ← 当前文件
+```
 
 ### 命令速查
+
+所有命令都需要在 **插件根目录** 执行（即 `main.py` 所在目录）：
 
 ```bash
 # 查看 PDF 信息
