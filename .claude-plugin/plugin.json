@@ -1,7 +1,7 @@
 {
   "name": "reading-companion",
-  "version": "1.0.0",
-  "description": "阅读伴侣 - 帮助用户阅读和整理书籍。支持 PDF 书籍裁剪、转换为 Markdown、AI 润色优化、以及 Obsidian 笔记组织。",
+  "version": "1.0.1",
+  "description": "阅读伴侣 - 帮助用户阅读和整理书籍。支持 PDF 书籍裁剪、转换为 Markdown、AI 润色优化。",
   "author": {
     "name": "nofrish",
     "url": "https://github.com/nofrish"
@@ -11,7 +11,6 @@
   "keywords": [
     "reading",
     "pdf",
-    "obsidian",
     "markdown",
     "books",
     "notes"

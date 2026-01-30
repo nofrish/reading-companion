@@ -8,8 +8,8 @@
     {
       "name": "reading-companion",
       "source": "./",
-      "description": "阅读伴侣 - PDF 书籍裁剪、Markdown 转换、Obsidian 笔记整理",
-      "version": "1.0.0"
+      "description": "阅读伴侣 - PDF 书籍裁剪、Markdown 转换、AI 润色优化",
+      "version": "1.0.1"
     }
   ]
 }
