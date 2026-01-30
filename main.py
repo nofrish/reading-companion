@@ -54,6 +54,8 @@ def convert(
     input_pdf: Path = typer.Argument(..., help="输入 PDF 文件路径"),
     output_md: Path = typer.Argument(None, help="输出 Markdown 文件路径（默认同名.md）"),
     pages: str = typer.Option(None, "--pages", "-p", help="指定页码范围，如 '1-10' 或 '1,3,5-8'"),
+    images: bool = typer.Option(True, "--images/--no-images", help="是否提取图片"),
+    embed_images: bool = typer.Option(False, "--embed", help="将图片以 base64 嵌入（文件会很大）"),
 ):
     """将 PDF 转换为 LLM 友好的 Markdown"""
     if not input_pdf.exists():
@@ -69,9 +71,22 @@ def convert(
 
     rprint(f"[blue]正在转换 {input_pdf}...[/blue]")
 
-    md_text = pymupdf4llm.to_markdown(str(input_pdf), pages=page_list)
-
     output_md.parent.mkdir(parents=True, exist_ok=True)
+
+    if embed_images:
+        md_text = pymupdf4llm.to_markdown(str(input_pdf), pages=page_list, embed_images=True)
+    elif images:
+        image_dir = output_md.parent / f"{output_md.stem}_images"
+        image_dir.mkdir(parents=True, exist_ok=True)
+        md_text = pymupdf4llm.to_markdown(
+            str(input_pdf), pages=page_list, write_images=True, image_path=str(image_dir)
+        )
+        # 修正图片路径为相对路径
+        md_text = md_text.replace(f"![]({image_dir}/", f"![]({output_md.stem}_images/")
+        rprint(f"[blue]图片保存到：{image_dir}[/blue]")
+    else:
+        md_text = pymupdf4llm.to_markdown(str(input_pdf), pages=page_list)
+
     output_md.write_text(md_text, encoding="utf-8")
 
     rprint(f"[green]成功：已转换为 {output_md}[/green]")
@@ -110,6 +125,7 @@ def info(
 def batch(
     config_file: Path = typer.Argument(..., help="配置文件路径 (JSON)"),
     convert_to_md: bool = typer.Option(True, "--convert/--no-convert", help="是否同时转换为 Markdown"),
+    images: bool = typer.Option(True, "--images/--no-images", help="是否提取图片"),
 ):
     """
     根据配置文件批量切分 PDF 并转换
@@ -167,7 +183,16 @@ def batch(
         if convert_to_md:
             output_md = output_dir / f"{name}.md"
             page_list = list(range(start - 1, end))
-            md_text = pymupdf4llm.to_markdown(str(input_pdf), pages=page_list)
+            if images:
+                image_dir = output_dir / f"{name}_images"
+                image_dir.mkdir(parents=True, exist_ok=True)
+                md_text = pymupdf4llm.to_markdown(
+                    str(input_pdf), pages=page_list, write_images=True, image_path=str(image_dir)
+                )
+                # 修正图片路径为相对路径
+                md_text = md_text.replace(f"![]({image_dir}/", f"![]({name}_images/")
+            else:
+                md_text = pymupdf4llm.to_markdown(str(input_pdf), pages=page_list)
             output_md.write_text(md_text, encoding="utf-8")
             rprint(f"  [green]✓[/green] {name}.md")
 

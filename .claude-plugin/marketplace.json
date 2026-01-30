@@ -1,0 +1,15 @@
+{
+  "name": "reading-companion",
+  "owner": {
+    "name": "nofrish",
+    "url": "https://github.com/nofrish"
+  },
+  "plugins": [
+    {
+      "name": "reading-companion",
+      "source": "./",
+      "description": "阅读伴侣 - PDF 书籍裁剪、Markdown 转换、Obsidian 笔记整理",
+      "version": "1.0.0"
+    }
+  ]
+}
